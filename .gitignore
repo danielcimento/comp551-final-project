@@ -1,1 +1,4 @@
 .ipynb_checkpoints/
+latex/*.aux
+latex/*.synctex.gz
+latex/*.log
