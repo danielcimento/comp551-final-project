@@ -93,11 +93,23 @@ For the simple linear model methodology, there is little to discuss that hasn't 
 
 \subsection{Alternative Simple Models}
 
-% TODO
+For each of the alternative simple models we tested, we used the default sklearn implementations, so we will briefly touch upon our rationale for choosing these models, as well as the hyper parameters we tested, and what effect we anticipated they would have on the model's performance.
 
 \subsubsection{Random Forests}
 
-% TODO
+Sentiment analysis with bag-of-words can be ultimately thought of as an entropy based task. Since certain words are significantly more positive or negative than others, the use of these words is liable to heavily influence the overall sentiment of that review. Other words are only somewhat charged, so they will have only a mild influence on the overall sentiment.
+
+Because of these facts, decision trees seem to be an excellent candidate for sentiment analysis. However, decision trees come with non-negligible downsides, not least of which are the long training times and the risk of overfitting.
+
+The Random Forest classifier serves as an excellent compromise to these problems. Since the classifier creates multiple small trees based on random subsets of the features, the training time is kept low overall, since no single tree is too deep and not as much consideration needs to be given to features that have low overall impact on the impurity.
+
+For hyper-parameters, we experimented with the maximum depth of each tree, the criterion used for deciding the split at each level of the tree, and the number of trees in the forest.
+
+The impact of the maximum depth is easily understandable: if there are many words in our vocabulary with high entropy, then allowing our trees to use more of those words will create a more accurate ensemble of trees.
+
+The number of trees in the forest has a similar rationale. Since results are averaged from the results of the trees, having more trees can reduce misclassifications that are caused by the random feature selection.
+
+We didn't expect to see much variance by changing the split criterion, since entropy and gini impurity are known to perform similarly well. We had expected entropy to perform slightly better, since entropy is more commonly used for classification into discrete classes. Nevertheless, there are only two criteria to choose between, so we felt as though it was worth considering in the event that our hypothesis was incorrect.
 
 \subsubsection{Logistic Regression}
 
