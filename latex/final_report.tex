@@ -34,7 +34,7 @@
 
 \section{Objective}
 
-For this project, we were tasked with recreating the baselines reported in the paper ``Distributed Representations of Sentences and Documents'' (Le \& Mikolov, 2016). Our objective was two-fold: first we needed to achieve the same basline performances reported, then if possible, to tune those baselines further, to achieve more competitive performance. Though we anticipated that we would be able to beat the reported baselines, we did not expect to outperform the main model of the paper, the Paragraph Vector model.
+For this project, we were tasked with recreating the baselines reported in the paper ``Distributed Representations of Sentences and Documents'' (Le \& Mikolov, 2016). Our objective was two-fold: first we aimed to achieve the same basline performances as the paper, then if possible, to tune those baselines further, achieving more competitive performance. Though we anticipated that we would be able to beat the reported baselines, we did not have much expectation that we would outperform the main model of the paper, the Paragraph Vector model.
 
 %% TODO: Add more(?)
 
@@ -48,24 +48,24 @@ The pre-processing and feature selection composed a non-negligible part of our m
 
 \subsubsection{Manual Data Cleaning}
 
-In the first place, the sentence files provided in the Stanford sentiment analysis database were encoded in Latin-1. Since our code would benefit from having a consistent encoding standard throughout the development process, we needed to handle these files with the UTF-8 encoding standard. This resulted in parts of the file being inconsistently encoded, with mojibake appearing occasionally throughout our dataset, which proved to be troublesome for Python's default IO implementation. Consequently, the first step of our data pre-processing involved cleaning the sentence file by replacing all Latin-1 encoded characters with their corresponding unicode equivalent.
+In the first place, the sentence files provided in the Stanford sentiment analysis data set were encoded in Latin-1. Since our code would benefit from having a consistent encoding standard throughout the development process, we needed to handle these files with the UTF-8 encoding standard. This resulted in parts of the file being inconsistently encoded, with mojibake appearing occasionally throughout our dataset, which proved troublesome for Python's default IO implementation. Consequently, the first step of our data pre-processing involved cleaning the sentence file by replacing all Latin-1 encoded characters with their corresponding unicode equivalent.
 
-Furthermore, the Stanford sentiment analysis database is formatted with the intention of being used for syntax parsing models, as the sentences are structured in a tree-like format, and their corresponding sentiments are stored across several files. For our application, we wanted to handle the full text of each sentence, so we wrote the code necessary to convert the tree-like structure into simple ``sentence-sentiment'' pairs.
+Furthermore, the Stanford sentiment analysis data set is formatted with the intention of being used for syntax parsing models, as the sentences are structured in a tree-like format, and their corresponding sentiments are stored across several files. For our application, we wanted to handle the full text of each sentence, so we wrote the code necessary to convert the tree-like structure into simple ``sentence-sentiment'' pairs.
 
 \subsubsection{Vectorization}
 
 Once we had our data loaded in the proper format, we needed to extract the features from each sentence to create vectors for our models. The simplest representation would be bag-of-words, so we started with that, using sklearn's built in CountVectorizer.
 
-However, we felt that just using bag-of-words wouldn't accurately capture the semantic similarity between inflected words (e.g. ``film'' and ``films''), so we replaced CountVectorizer's built-in tokenizer with a tokenizer that tagged the parts of speech for each word, then retrieved that word's lemma from the WordNet database. To do so, we took advantage of several features built into the nltk package. We also used a CountVectorizer that included both unigrams and bigrams (for our Bigram Naive Bayes implementation), which used the same tokenization scheme.
+However, we felt that just using bag-of-words wouldn't accurately capture the semantic similarity between inflected words (e.g. ``film'' and ``films''), so we replaced CountVectorizer's built-in tokenizer with a tokenizer that tagged the parts of speech for each word and retrieved that word's lemma from the WordNet database. To do so, we took advantage of several features built into the nltk package. We also used a CountVectorizer that included both unigrams and bigrams (for our Bigram Naive Bayes implementation), which used the same tokenization scheme.
 
-Similar to the paper in question, we labelled each sentence in the Stanford sentiment analysis dataset based on its sentiment score (using the labels Very Negative, Negative, Neutral, Positive, and Very Positive). We likewise created a set with coarser label classifications (with labels Negative and Positive), ignoring all neutral data points for our coarse-grain performance evaluations.
+Similar to the paper under consideration, we labelled each sentence in the Stanford sentiment analysis dataset based on its sentiment score (using the labels Very Negative, Negative, Neutral, Positive, and Very Positive). We likewise created a set with coarser label classifications (with labels Negative and Positive), ignoring all neutral data points for our coarse-grain performance evaluations.
 
-The IMDB dataset was vectorized in a similar way, but since it used a binary label approach, we didn't need to make any modifications to the labels.
+The IMDB data set was vectorized in a similar way, but since it used a binary label approach, we didn't need to make any modifications to the labels.
 
 \subsection{Simple Linear Models}
 
 % TODO
-For the simple linear model methodology, there is little to discuss that hasn't already been covered by the paper in question, but we will summarize the main points of each. 
+For the simple linear model methodology, there is little to discuss that hasn't already been covered by the paper under consideration, but we will summarize the main points of each. 
 
 \subsubsection{Naive Bayes}
 
@@ -93,7 +93,7 @@ For the simple linear model methodology, there is little to discuss that hasn't 
 
 \subsection{Alternative Simple Models}
 
-For each of the alternative simple models we tested, we used the default sklearn implementations, so we will briefly touch upon our rationale for choosing these models, as well as the hyper parameters we tested, and what effect we anticipated they would have on the model's performance.
+For each of the alternative simple models we tested, we used the default sklearn implementations. We will briefly touch upon our rationale for choosing these models, as well as the hyperparameters we tested, and what effect we anticipated they would have on the model's performance.
 
 \subsubsection{Random Forests}
 
@@ -101,15 +101,15 @@ Sentiment analysis with bag-of-words can be ultimately thought of as an entropy 
 
 Because of these facts, decision trees seem to be an excellent candidate for sentiment analysis. However, decision trees come with non-negligible downsides, not least of which are the long training times and the risk of overfitting.
 
-The Random Forest classifier serves as an excellent compromise to these problems. Since the classifier creates multiple small trees based on random subsets of the features, the training time is kept low overall, since no single tree is too deep and not as much consideration needs to be given to features that have low overall impact on the impurity.
+The Random Forest classifier serves as an excellent compromise to these problems. The classifier creates multiple small trees based on random subsets of the features, so the training time is kept low overall, since no single tree is too deep and not as much consideration needs to be given to features that have low overall impact on the impurity.
 
-For hyper-parameters, we experimented with the maximum depth of each tree, the criterion used for deciding the split at each level of the tree, and the number of trees in the forest.
+For hyperparameters, we experimented with the maximum depth of each tree, the criterion used for deciding the split at each level of the tree, and the number of trees in the forest.
 
 The impact of the maximum depth is easily understandable: if there are many words in our vocabulary with high entropy, then allowing our trees to use more of those words will create a more accurate ensemble of trees.
 
 The number of trees in the forest has a similar rationale. Since results are averaged from the results of the trees, having more trees can reduce misclassifications that are caused by the random feature selection.
 
-We didn't expect to see much variance by changing the split criterion, since entropy and gini impurity are known to perform similarly well. We had expected entropy to perform slightly better, since entropy is more commonly used for classification into discrete classes. Nevertheless, there are only two criteria to choose between, so we felt as though it was worth considering in the event that our hypothesis was incorrect.
+We didn't expect to see much variance in performance by changing the split criterion, since entropy and gini impurity are known to perform similarly well. We had expected entropy to perform slightly better, since entropy is more commonly used for classification into discrete classes. Nevertheless, there are only two criteria to choose between, so we felt as though it was worth considering in the event that our hypothesis was incorrect.
 
 \subsubsection{Logistic Regression}
 
