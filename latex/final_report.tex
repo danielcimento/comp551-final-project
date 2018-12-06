@@ -44,19 +44,28 @@ Our methodology for this project was divided into several distinct phases. First
 
 \subsection{Data Pre-processing}
 
-% TODO
+The pre-processing and feature selection composed a non-negligible part of our methodology, so we will cover the steps taken to process the raw data sets. 
 
 \subsubsection{Manual Data Cleaning}
 
-% TODO
+In the first place, the sentence files provided in the Stanford sentiment analysis database were encoded in Latin-1. Since our code would benefit from having a consistent encoding standard throughout the development process, we needed to handle these files with the UTF-8 encoding standard. This resulted in parts of the file being inconsistently encoded, with mojibake appearing occasionally throughout our dataset, which proved to be troublesome for Python's default IO implementation. Consequently, the first step of our data pre-processing involved cleaning the sentence file by replacing all Latin-1 encoded characters with their corresponding unicode equivalent.
+
+Furthermore, the Stanford sentiment analysis database is formatted with the intention of being used for syntax parsing models, as the sentences are structured in a tree-like format, and their corresponding sentiments are stored across several files. For our application, we wanted to handle the full text of each sentence, so we wrote the code necessary to convert the tree-like structure into simple ``sentence-sentiment'' pairs.
 
 \subsubsection{Vectorization}
 
-% TODO
+Once we had our data loaded in the proper format, we needed to extract the features from each sentence to create vectors for our models. The simplest representation would be bag-of-words, so we started with that, using sklearn's built in CountVectorizer.
+
+However, we felt that just using bag-of-words wouldn't accurately capture the semantic similarity between inflected words (e.g. ``film'' and ``films''), so we replaced CountVectorizer's built-in tokenizer with a tokenizer that tagged the parts of speech for each word, then retrieved that word's lemma from the WordNet database. To do so, we took advantage of several features built into the nltk package. We also used a CountVectorizer that included both unigrams and bigrams (for our Bigram Naive Bayes implementation), which used the same tokenization scheme.
+
+Similar to the paper in question, we labelled each sentence in the Stanford sentiment analysis dataset based on its sentiment score (using the labels Very Negative, Negative, Neutral, Positive, and Very Positive). We likewise created a set with coarser label classifications (with labels Negative and Positive), ignoring all neutral data points for our coarse-grain performance evaluations.
+
+The IMDB dataset was vectorized in a similar way, but since it used a binary label approach, we didn't need to make any modifications to the labels.
 
 \subsection{Simple Linear Models}
 
 % TODO
+For the simple linear model methodology, there is little to discuss that hasn't already been covered by the paper in question, but we will summarize the main points of each. 
 
 \subsubsection{Naive Bayes}
 
@@ -71,6 +80,8 @@ Our methodology for this project was divided into several distinct phases. First
 % TODO
 
 \subsection{Improving Linear Models}
+
+% TODO
 
 \subsubsection{Naive Bayes}
 
