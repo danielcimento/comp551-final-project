@@ -113,7 +113,17 @@ We didn't expect to see much variance in performance by changing the split crite
 
 \subsubsection{Logistic Regression}
 
-% TODO
+Logistic Regression, similar to Random Forests, attempts to identify ``explanatory variables'' that have an impact on determining the classification of a given vector, and it then fits a logarithmic distribution to that data.
+
+In effect, since we anticipated that certain words would have a high impact on determining class, the Logistic Regression would be able to prioritize certain features in determining overall sentiment. We thought as well that it might perform even better than the Random Forests, since the Random Forests only indirectly prioritize important features through chance repitition. Since we have so few categories, and since our lemmatization approach to vectorization would likely increase the number of events per explanatory variable, we anticipated Logistic Regression to be one of our best performing models.
+
+The hyperparameters we experimented with were the norm function used in the penalization, the tolerance for the stopping criteria, and the regularization strength.
+
+The tolerance for stopping only has a real impact when we struggle to further improve our model, so we would expect a low tolerance to perform better, since it would keep training until it finds the optimal value.
+
+The regularization strength determines how much cost we would attribute to increasing the magnitudes of our parameters, which means that lower regularization strength would allow us to better classify data sets without clear delineations between classes, and high regularization strength would reduce overfitting if there are fairly clear delineations between classes. As a result, we anticipated that a higher regularization strength (low $C$ in sklearn) would give better performance for our coarse-grain evaluation models, whereas a lower regularization strength (high $C$ in sklearn) would give better performance for our fine-grain evaluation models.
+
+The norm function for penalization wouldn't have much impact on its own, but when coupled with high regularization strength, we would expect L2 to provide more accurate solutions.
 
 \subsubsection{K-Nearest Neighbors}
 
