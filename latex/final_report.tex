@@ -117,7 +117,13 @@ We didn't expect to see much variance in performance by changing the split crite
 
 \subsubsection{K-Nearest Neighbors}
 
-% TODO
+K-Nearest Neighbors is notoriously ineffective for problems such as these, since the distance-based metrics used for calculating ``nearness'' fall apart at high dimensionalities. Nevertheless, the training time is effectively non-existent, and if it performed well, it would have the potential to prove the null hypothesis for the task at hand, so we thought it worthwhile to at least entertain this model.
+
+The hyperparameters we considered were the number of neighbors queried for each testing point and the weight of each neighbor. 
+
+Varying the number of neighbors to a certain value $k$ would expect to improve the model's performance if we anticipated data points of any given class to be found in clusters of size $k$. Changing the weight of the neighbors to scale based on the distance from the testing point would improve the performance of the model if we anticipated points to be found in tight, compact clusters.
+
+Since we couldn't intuit the layout of the vectors in any meaningful way, our approach to tuning these parameters was more or less arbitrary.
 
 \subsection{Complex Models}
 
