@@ -69,16 +69,14 @@ The IMDB data set was vectorized in a similar way, but since it used a binary la
 For the simple linear model methodology, there is little to discuss that hasn't already been covered by the paper under consideration, but we will summarize the main points of each. 
 
 \subsubsection{Naive Bayes}
-
-% TODO
+The Naive Bayes model classifies data through the application of Baye's Theorem with the assumption that features are independent from one another. Naive Bayes models are fast and simple and are often suitable for very high-dimensional datasets, such as the count vectors used in sentiment analysis tasks. As a result of the algorithms speed and small amount of tunable hyperparameters, they end up being very useful as a quick and simple baseline for classification problems. The Naive Bayes classifier assumption of feature independence given the class may cause the semantic context of certain words used in conjunction with each to be lost, which can be used to improve the sentiment classification accuracy however. Thus we hypothesize that the baseline will not perform as well as some of the other methods from the paper.
 
 \subsubsection{Linear SVM}
-
-% TODO
+The linear SVM model is a representation of the datapoints in space, mapped so that the examples of the separate categories are divided by a hyperplane with the largest margin between the classes. Text classification problems are often linearly separable, which allows the Linear SVM classifer to perform well. Since count vectors are used as input data to the classifier, the large number of features are able to be handled well by the Linear SVM classifier, thus using another kernel will not increase performance significantly but instead will increase the computational cost. There are also less parameters to be optimized than other classifiers.
 
 \subsubsection{Bigram Naive Bayes}
 
-% TODO
+When bigrams are used in conjunction with Naive Bayes, a single word of context will be considered which the classifier can use to gain a greater semantic understanding of the text. Thus, we hypothesize that it will perform better than the bag of words Naive Bayes, but not to a significant degree, as only a single word of context is kept.
 
 \subsection{Improving Linear Models}
 
