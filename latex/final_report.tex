@@ -56,9 +56,9 @@ Furthermore, the Stanford sentiment analysis data set is formatted with the inte
 
 Once we had our data loaded in the proper format, we needed to extract the features from each sentence to create vectors for our models. The simplest representation would be bag-of-words, so we started with that, using sklearn's built in CountVectorizer.
 
-However, we felt that just using bag-of-words wouldn't accurately capture the semantic similarity between inflected words (e.g. ``film'' and ``films''), so we replaced CountVectorizer's built-in tokenizer with a tokenizer that tagged the parts of speech for each word and retrieved that word's lemma from the WordNet database. To do so, we took advantage of several features built into the nltk package. We also used a CountVectorizer that included both unigrams and bigrams (for our Bigram Naive Bayes implementation), which used the same tokenization scheme. For the Stanford dataset, word embedding vectors for the Word Vector Averaging model were obtained using the gensim module's word2vec library. The word embedding vectors were averaged into a single vector for each review, and the word2vec model hyperparameters were cross validated. The methods used to cross validate the hyperparameters are expanded on in the Word Vector Averaging section.
+However, we felt that just using bag-of-words wouldn't accurately capture the semantic similarity between inflected words (e.g. ``film'' and ``films''), so we replaced CountVectorizer's built-in tokenizer with a tokenizer that tagged the parts of speech for each word and retrieved that word's lemma from the WordNet database. To do so, we took advantage of several features built into the nltk package. We also used a CountVectorizer that included both unigrams and bigrams (for our Bigram Naive Bayes implementation), which used the same tokenization scheme. 
 
-Similar to the paper under consideration, we labelled each sentence in the Stanford sentiment analysis dataset based on its sentiment score (using the labels Very Negative, Negative, Neutral, Positive, and Very Positive). We likewise created a set with coarser label classifications (with labels Negative and Positive), ignoring all neutral data points for our coarse-grain performance evaluations by using filtered datasets only containing reviews with score labels less than 0.4 and  greater than 0.6. The sentences in the Stanford treebank were split into train (8544), dev (1101) and test splits (2210). The neutral-filtered datasets contain around 20\% less data, with the three sets having 6920/872/1821 sentences.
+Similar to the paper under consideration, we labelled each sentence in the Stanford sentiment analysis dataset based on its sentiment score (using the labels Very Negative, Negative, Neutral, Positive, and Very Positive). We likewise created a set with coarser label classifications (with labels Negative and Positive), ignoring all neutral data points for our coarse-grain performance evaluations by using filtered datasets only containing reviews with score labels less than 0.4 and greater than 0.6. The sentences in the Stanford treebank were split into train (8544), dev (1101) and test splits (2210). The neutral-filtered datasets contain around 20\% less data, with the three sets having 6920/872/1821 sentences.
 
 
 The IMDB data set was vectorized in a similar way, but since it used a binary label approach, we didn't need to make any modifications to the labels.
@@ -69,16 +69,14 @@ The IMDB data set was vectorized in a similar way, but since it used a binary la
 For the simple linear model methodology, there is little to discuss that hasn't already been covered by the paper under consideration, but we will summarize the main points of each. 
 
 \subsubsection{Naive Bayes}
-
-% TODO
+The Naive Bayes model classifies data through the application of Baye's Theorem with the assumption that features are independent from one another. Naive Bayes models are fast and simple and are often suitable for very high-dimensional datasets, such as the count vectors used in sentiment analysis tasks. As a result of the algorithms speed and small amount of tunable hyperparameters, they end up being very useful as a quick and simple baseline for classification problems. The Naive Bayes classifier assumption of feature independence given the class may cause the semantic context of certain words used in conjunction with each to be lost, which can be used to improve the sentiment classification accuracy however. Thus we hypothesize that the baseline will not perform as well as some of the other methods from the paper.
 
 \subsubsection{Linear SVM}
-
-% TODO
+The linear SVM model divides the datapoints into separate classes using a hyperplane which maximizes the margin between the classes. Text classification problems are often linearly separable, which allows the Linear SVM classifer to perform well. Since count vectors are used as input data to the classifier, the large number of features are able to be handled well by the Linear SVM classifier, thus using another kernel will not increase performance significantly but instead will increase the computational cost. There are also less parameters to be optimized than other classifiers.
 
 \subsubsection{Bigram Naive Bayes}
 
-% TODO
+When bigrams are used in conjunction with Naive Bayes, a single word of context will be considered which the classifier can use to gain a greater semantic understanding of the text. Thus, we hypothesize that it will perform better than the bag of words Naive Bayes, but not to a significant degree, as only a single word of context is preserved.
 
 \subsection{Improving Linear Models}
 
